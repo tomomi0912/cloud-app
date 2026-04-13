@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.86.1",
-    "@neondatabase/serverless": "^1.0.2",
+    "postgres": "^3.4.5",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.2",
     "next": "16.2.3",
