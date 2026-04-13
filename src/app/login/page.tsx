@@ -22,13 +22,16 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
+      let data: { ok?: boolean; error?: string } = {};
+      try { data = await res.json(); } catch { /* ignore */ }
       if (!res.ok) {
-        setError(data.error || 'ログインに失敗しました');
+        setError(data.error || `サーバーエラー (${res.status})`);
       } else {
         router.push('/');
         router.refresh();
       }
+    } catch (err) {
+      setError('接続エラー: ' + String(err));
     } finally {
       setLoading(false);
     }
