@@ -10,7 +10,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'メールアドレスとパスワードを入力してください' }, { status: 400 });
   }
 
-  const rows = await sql`SELECT * FROM users WHERE email = ${email}`;
+  let rows;
+  try {
+    rows = await sql`SELECT * FROM users WHERE email = ${email}`;
+  } catch (err) {
+    return NextResponse.json({ error: 'DB接続エラー: ' + String(err) }, { status: 500 });
+  }
+
   const user = rows[0] as {
     id: number; email: string; name: string; password_hash: string; role: string;
   } | undefined;
