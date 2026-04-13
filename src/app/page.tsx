@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
-import db from '@/lib/db';
+import sql from '@/lib/db';
 import Header from '@/components/Header';
 import CompanyGrid from '@/components/CompanyGrid';
 import ClaudeChat from '@/components/ClaudeChat';
@@ -17,9 +17,9 @@ export default async function DashboardPage() {
   const session = await getSession();
   if (!session) redirect('/login');
 
-  const companies = db
-    .prepare('SELECT id, name, code, memo, tool_type FROM companies WHERE user_id = ? ORDER BY code, name')
-    .all(session.userId) as Company[];
+  const companies = await sql`
+    SELECT id, name, code, memo, tool_type FROM companies WHERE user_id = ${session.userId} ORDER BY code, name
+  ` as Company[];
 
   const now = new Date().toLocaleString('ja-JP', {
     timeZone: 'Asia/Tokyo',

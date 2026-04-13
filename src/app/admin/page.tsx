@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
-import db from '@/lib/db';
+import sql from '@/lib/db';
 import Header from '@/components/Header';
 import UserManagement from '@/components/UserManagement';
 import ClaudeChat from '@/components/ClaudeChat';
@@ -18,9 +18,9 @@ export default async function AdminPage() {
   if (!session) redirect('/login');
   if (session.role !== 'admin') redirect('/');
 
-  const users = db.prepare(
-    'SELECT id, email, name, role, created_at FROM users ORDER BY created_at ASC'
-  ).all() as DbUser[];
+  const users = await sql`
+    SELECT id, email, name, role, created_at FROM users ORDER BY created_at ASC
+  ` as DbUser[];
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

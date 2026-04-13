@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
-import db from '@/lib/db';
+import sql from '@/lib/db';
 import Header from '@/components/Header';
 import CompanyWorkspace from '@/components/CompanyWorkspace';
 import ClaudeChat from '@/components/ClaudeChat';
@@ -18,9 +18,10 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
   if (!session) redirect('/login');
 
   const { id } = await params;
-  const company = db
-    .prepare('SELECT id, name, code, memo, tool_type FROM companies WHERE id = ? AND user_id = ?')
-    .get(id, session.userId) as Company | undefined;
+  const rows = await sql`
+    SELECT id, name, code, memo, tool_type FROM companies WHERE id = ${id} AND user_id = ${session.userId}
+  `;
+  const company = rows[0] as Company | undefined;
 
   if (!company) redirect('/');
 
