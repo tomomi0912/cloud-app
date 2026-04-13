@@ -19,7 +19,7 @@ export default async function AdminPage() {
   if (session.role !== 'admin') redirect('/');
 
   const users = await sql`
-    SELECT id, email, name, role, created_at FROM users ORDER BY created_at ASC
+    SELECT id, email, name, role, created_at::text FROM users ORDER BY created_at ASC
   ` as DbUser[];
 
   return (
